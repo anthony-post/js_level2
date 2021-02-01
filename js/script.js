@@ -1,11 +1,13 @@
-//класс Список товаров
-class ProductsList{
+const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/getBasket.json';
 
+//класс Список товаров Каталога
+class ProductsList{
+    // то, что указано в конструкторе будет присваиваться или запускаться в момент создания объекта
     constructor(container = '.products'){ //присваиваем значение по умолчанию свойству container
         this.container = container; //свойство контейнер, в который будет записываться верстка товара
         this.goods = []; //свойство массив, который будет наполняться товарами с помощью метода _fetchProducts()
-        this._fetchProducts(); //свойство метод _fetchProducts(), который описан ниже
-        this.sumAllPrices();
+        this._fetchProducts(); //будет происходить формирование массива товаров каталога в момент создания объекта класса ProductsList
+        this.sumAllPrices(); //будет происходить подсчет суммы всех товаров каталога в момент создания объекта класса ProductsList
     } 
     //закрытый метод, к которому нельзя обращаться извне
     _fetchProducts(){
@@ -24,8 +26,8 @@ class ProductsList{
         //обходим массив товаров с помощью цикла for of или forEach
         for(let product of this.goods){ //product - текущий элемент массива goods
             //создаем объект с помощью конструктора класса ProductItem, в который передаем product - текущий элемент массива
-            const productObj = new ProductItem(product);
-            //подставляем верстку для каждого товара
+            const productObj = new ProductItem(product); //Объект в цикле for of создается для того, чтобы с помощью него вызывать методы класса товар и в этом классе вызывать метод render для получения верстки каждого товара, то есть мы в цикле получаем готовую верстку для каждого товара на основании свойств объекта товар из массива.
+            //подставляем верстку для каждого товара путем вызова метода render() для объекта productObj из класса ProductItem
             block.insertAdjacentHTML('beforeend',productObj.render())
 //            block.innerHTML += productObj.render();
         }
@@ -33,7 +35,7 @@ class ProductsList{
     //метод, определяющий суммарную стоимость всех товаров
     sumAllPrices() {
 
-        let sum = 0;;
+        let sum = 0;
 
         for (let product of this.goods) {
 
@@ -42,11 +44,13 @@ class ProductsList{
 
         console.log(`Стоимость всех товаров в магазине равна ${sum}`);
 
+        //альтернативный вариант подсчета стоимости всех товаров каталога с использованием метода reduce()
+
     }
     
 }
 
-//класс Товар
+//класс Товар Каталога
 class ProductItem{
 
 	constructor(product, img = 'https://placehold.it/180x180'){ //product - это объект товара с уже известными параметрами такими как id, title, price
@@ -77,19 +81,43 @@ class ProductItem{
 	}
 }
 
-let list = new ProductsList(); //создаем объект класса ProductsList
+let list = new ProductsList(); //создаем объект класса ProductsList (в этот момент срабатывают методы _fetchProducts() и sumAllPrices(), так как они указаны в конструкторе)
 
 list.render(); //запускам метод render из класса ProductsList у созданного объекта
 
-//класс Корзины
+//класс Список товаров Корзины
 class Cart {
 
-    constructor() {
+    constructor(containerCart = '.cart__window') {
 
-
+        this.containerCart = containerCart;
+        this.goodsCart = [];
+        this._getGoodsCart()
+            .then(dataCart => {
+                this.goodsCart = [...dataCart];
+                this.render();
+            });
     }
 
-    render() {}
+    _getGoodsCart() {
+        return fetch(`${API}/getBasket.json`)
+                    .then(result => result.json())
+                    .catch(error => {
+                    console.log(error);
+        })
+    }
+
+    render() {
+
+        const  blockCart = document.querySelector(this.containerCart);
+
+        for (let productCart of this.goodsCart) {
+            
+            const productObjCart = new CartItem (productCart);
+
+            blockCart.insertAdjacentHTML('beforeend', productObjCart.render());
+        }
+    }
 
     addProduct() {}
 
@@ -98,18 +126,32 @@ class Cart {
     cartPrice() {}
 }
 
-//класс элемента корзины товаров
+//класс Товар Корзины (элемент корзины товаров)
 class CartItem {
 
-    constructor() {
+    constructor(productCart) {
 
-
+        this.product_name = productCart.product_name; 
+		this.price = productCart.price;
+		this.id_product = productCart.id_product;
+		this.quantity = productCart.quantity;
     }
-
-    render() {}
+    //вывод товара на экран
+    render() {
+        return `<div class="productCart__item">
+                    // <img src="${this.img}" class="productCart__pic">
+                    <p class="productCart__id">${this.id_product}</p>
+                    <h3 class="productCart__title">${this.product_name}</h3>
+                    <p class="productCart__price">${this.price}</p>
+                    <p class="productCart__quantity">${this.quantity}</p>
+                </div>`
+    }
 
 }
 
+let listCart = new Cart();
+
+listCart.render();
 
 
 
