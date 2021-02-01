@@ -14,7 +14,7 @@ const products = [
 */
 const renderProduct = (objProd) => {
     return `<div class="product__item">
-                <img src="http://placehold.it/116x116" class="product__pic">
+                <img src="http://placehold.it/180x180" class="product__pic">
                 <h3 class="product__title">${objProd.title}</h3>
                 <div class="product__text">
                     <p class="product__price">${objProd.price}</p>
