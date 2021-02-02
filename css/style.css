@@ -43,15 +43,15 @@
 }
 
 .cart__pic-link {
-
-}
-
-.btn__cart {
     fill: #3cc3b5;
 }
 
-.btn__cart:hover {
+.cart__pic-link:hover {
     fill: #a1a1a1;
+}
+
+.btn__cart {
+    
 }
 
 /*PRODUCTS*/
@@ -155,4 +155,15 @@
 i {
     font-size: 15px;
     color: gold;
+}
+
+/*CART*/
+
+.cart__window {
+    display: flex;
+    justify-content: space-between;
+}
+
+.invisible {
+    display: none;
 }

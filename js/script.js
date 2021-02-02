@@ -1,4 +1,5 @@
-const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/getBasket.json';
+// const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/getBasket.json';
+const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
 //класс Список товаров Каталога
 class ProductsList{
@@ -94,7 +95,7 @@ class Cart {
         this.goodsCart = [];
         this._getGoodsCart()
             .then(dataCart => {
-                this.goodsCart = [...dataCart];
+                this.goodsCart = [...dataCart.contents];
                 this.render();
             });
     }
@@ -117,6 +118,16 @@ class Cart {
 
             blockCart.insertAdjacentHTML('beforeend', productObjCart.render());
         }
+
+        document.querySelector('.btn__cart').addEventListener('click', () => {
+
+            let cartWindow = document.querySelector('.cart__window');
+
+            cartWindow.classList.remove('invisible');
+
+            // cartWindow.classList.toggle('invisible');
+                
+        });
     }
 
     addProduct() {}
@@ -129,8 +140,9 @@ class Cart {
 //класс Товар Корзины (элемент корзины товаров)
 class CartItem {
 
-    constructor(productCart) {
+    constructor(productCart, img = 'https://placehold.it/80x80') {
 
+        this.img = img;
         this.product_name = productCart.product_name; 
 		this.price = productCart.price;
 		this.id_product = productCart.id_product;
@@ -139,11 +151,11 @@ class CartItem {
     //вывод товара на экран
     render() {
         return `<div class="productCart__item">
-                    // <img src="${this.img}" class="productCart__pic">
-                    <p class="productCart__id">${this.id_product}</p>
+                    <p class="productCart__id">Идентификатор: ${this.id_product}</p>
+                    <img src="${this.img}" class="productCart__pic">
                     <h3 class="productCart__title">${this.product_name}</h3>
-                    <p class="productCart__price">${this.price}</p>
-                    <p class="productCart__quantity">${this.quantity}</p>
+                    <p class="productCart__price">Цена: ${this.price}</p>
+                    <p class="productCart__quantity">Количество: ${this.quantity}</p>
                 </div>`
     }
 
