@@ -95,13 +95,13 @@ class Cart {
         this.goodsCart = [];
         this._getGoodsCart()
             .then(dataCart => {
-                this.goodsCart = [...dataCart.contents];
-                this.render();
+                this.goodsCart = [...dataCart.contents]; //распаковываем и обращаемся к свойству contents для получения данных о товарах 
+                this.render(); //запускаем метод render(), который формирует блок корзины с карточками товаров
             });
     }
 
     _getGoodsCart() {
-        return fetch(`${API}/getBasket.json`)
+        return fetch(`${API}/getBasket.json`) //читаем файл по url, который записан в API
                     .then(result => result.json())
                     .catch(error => {
                     console.log(error);
@@ -121,9 +121,9 @@ class Cart {
 
         document.querySelector('.btn__cart').addEventListener('click', () => {
 
-            let cartWindow = document.querySelector('.cart__window');
+            let cartWrp = document.querySelector('.cart__wrp');
 
-            cartWindow.classList.remove('invisible');
+            cartWrp.classList.remove('invisible');
 
             // cartWindow.classList.toggle('invisible');
                 
@@ -142,13 +142,13 @@ class CartItem {
 
     constructor(productCart, img = 'https://placehold.it/80x80') {
 
+        this.id_product = productCart.id_product;
         this.img = img;
         this.product_name = productCart.product_name; 
 		this.price = productCart.price;
-		this.id_product = productCart.id_product;
 		this.quantity = productCart.quantity;
     }
-    //вывод товара на экран
+    //формирование блока карточки товара для корзины
     render() {
         return `<div class="productCart__item">
                     <p class="productCart__id">Идентификатор: ${this.id_product}</p>
